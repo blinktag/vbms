@@ -29,7 +29,7 @@ func main() {
 	verifyDatabase()
 	runBatch() // Fire off first batch
 
-	for _ = range doTicker() {
+	for range doTicker() {
 		runBatch()
 	}
 }
@@ -108,7 +108,7 @@ func updateBatch(db *sql.DB) int64 {
 	// Update batch of servers
 	// sqlite doesn't like LIMIT clauses in UPDATE statements, so do a hacky subquery
 	stmt, err := db.Prepare(`
-		UPDATE servers SET lastupdate = ? 
+		UPDATE servers SET lastupdate = ?
 		WHERE id IN (SELECT id FROM servers WHERE lastupdate < ? LIMIT ?)
 	`)
 
