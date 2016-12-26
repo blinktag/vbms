@@ -293,6 +293,7 @@ func (s *Server) UpdateDatabase() {
 	}
 }
 
+// RunChecks initiates all service checks for a server in goroutines
 func (s *Server) RunChecks() {
 
 	wg := new(sync.WaitGroup)
