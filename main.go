@@ -8,7 +8,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/blinktag/vbms/server"
 	"github.com/caarlos0/env"
-	"github.com/kisielk/sqlstruct"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -83,12 +82,7 @@ func runBatch() {
 
 	for rows.Next() {
 
-		// sqlstruct package avoids us having to do a messy .Scan(&var1, &var2....)
-		var srv server.Server
-		sqlstruct.Scan(&srv, rows)
-
-		// Pass db handle along so server can update itself
-		srv.DB = db
+		srv := server.NewServer(db, rows)
 
 		go func(cur *server.Server) {
 			cur.RunChecks()

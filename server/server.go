@@ -16,6 +16,7 @@ import (
 	"database/sql"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/kisielk/sqlstruct"
 	fastping "github.com/tatsushid/go-fastping"
 )
 
@@ -36,6 +37,16 @@ type Server struct {
 	EnablePing  bool   `sql:"enableping"`
 	ResultPing  string `sql:"pingresult"`
 	DB          *sql.DB
+}
+
+// NewServer returns a populated Server struct
+func NewServer(db *sql.DB, rows *sql.Rows) Server {
+	var srv Server
+
+	sqlstruct.Scan(&srv, rows)
+	srv.DB = db
+
+	return srv
 }
 
 // GetLogger returns instance of logrus prepopulated with server fields
